@@ -1,0 +1,41 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    height: 100vh;
+    background-color: #f0f0f0;
+}
+
+#game {
+    width: 55%; 
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#evaluation {
+    background-color: black;
+
+    width: 3%;
+    aspect-ratio: 3 / 50;
+    
+    margin-right: 5%;
+}
+
+#progress {
+    height: 70%;
+    background-color: rgb(63, 133, 109);
+}
+
+#myBoard {
+    width: 50%;
+}
+
+#info {
+    width: 45%; 
+    background-color: rgb(63, 133, 109);
+}
