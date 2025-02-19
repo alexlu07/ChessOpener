@@ -1,6 +1,7 @@
 * {
     padding: 0;
     margin: 0;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 body {
@@ -18,7 +19,8 @@ body {
 }
 
 #evaluation {
-    background-color: black;
+    background-color: rgb(63, 133, 109);
+    position: relative;
 
     width: 3%;
     aspect-ratio: 3 / 50;
@@ -27,8 +29,20 @@ body {
 }
 
 #progress {
-    height: 70%;
-    background-color: rgb(63, 133, 109);
+    height: 50%;
+    background-color: black;
+}
+
+#score {
+    position: absolute;
+    top: calc(100% + 10px);
+    margin-left: calc(50% - 50px);
+}
+
+#score div {
+    position: absolute;
+    text-align: center;
+    width: 100px;
 }
 
 #myBoard {
@@ -38,4 +52,73 @@ body {
 #info {
     width: 45%; 
     background-color: rgb(63, 133, 109);
+    padding: 5% 7%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-content: stretch;
+
+}
+
+#elo-selector {
+    text-align: right;
+}
+
+#elo-dropdown {
+    background-color: rgb(63, 133, 109);
+    border-color: white;
+    border-width: 1px;
+    margin-left: 10px;
+}
+
+.text {
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+}
+
+#top-box {
+    height: 25%;
+
+    margin-top: 35px;
+
+    border-style: solid;
+    border-color: white;
+    border-width: 1px;
+}
+
+#bottom-box {
+    height: 65%;
+    margin-top: 35px;
+
+    border-style: solid;
+    border-color: white;
+    border-width: 1px;
+}
+
+#stockfish {
+    height: 30%;
+    padding: 7%;
+}
+
+.branch {
+    text-wrap-mode: nowrap;
+    background-color: rgb(45, 82, 69);
+    padding: 5px;
+}
+
+#stockfish :not(:last-of-type).branch {
+    border-bottom: 1px solid white;
+}
+
+.branch .eval {
+    display: inline-block;
+    margin-right: 25px;
+    width: 70px;
+    padding: 3px;
+    text-align: center;
+    border-radius: 5px;
+    background-color: rgb(63, 133, 109);
+    border: 0px;
 }
