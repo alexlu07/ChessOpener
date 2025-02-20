@@ -20,8 +20,6 @@
     <link rel="stylesheet" href="{{ url_for('static',filename='styles.css') }}">
 
     <script type="module" src="{{ url_for('static',filename='script.js') }}"></script>
-    <script type="module" src="{{ url_for('static',filename='chess.js') }}"></script>
-
 
 
 </head>
@@ -29,7 +27,7 @@
     <div id="game">
         <div id="evaluation">
             <div id="progress"></div>
-            <div id="score"><div></div></div>
+            <div id="score" class="text"><div></div></div>
         </div>
 
         <div id="myBoard"></div>
@@ -52,6 +50,7 @@
         <div id="top-box"></div>
 
         <div id="bottom-box">
+            <div id="engine-text" class="text">Stockfish:</div>
             <div id="stockfish" class="text"></div>
         </div>
     </div>

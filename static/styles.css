@@ -5,13 +5,14 @@
 }
 
 body {
+    background-color: #111;
     display: flex;
     height: 100vh;
-    background-color: #f0f0f0;
+
 }
 
 #game {
-    width: 55%; 
+    width: 70%; 
 
     display: flex;
     align-items: center;
@@ -19,7 +20,7 @@ body {
 }
 
 #evaluation {
-    background-color: rgb(63, 133, 109);
+    background-color: white;
     position: relative;
 
     width: 3%;
@@ -29,20 +30,22 @@ body {
 }
 
 #progress {
-    height: 50%;
     background-color: black;
+    height: 50%;
 }
 
 #score {
     position: absolute;
     top: calc(100% + 10px);
     margin-left: calc(50% - 50px);
+
+    font-weight: bold;
 }
 
 #score div {
     position: absolute;
-    text-align: center;
     width: 100px;
+    text-align: center;
 }
 
 #myBoard {
@@ -50,75 +53,98 @@ body {
 }
 
 #info {
-    width: 45%; 
-    background-color: rgb(63, 133, 109);
+    background-color: #1a1a1a;
+    width: 30%; 
     padding: 5% 7%;
 
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    align-content: stretch;
+    align-items: stretch;
 
+    overflow: hidden;
 }
 
 #elo-selector {
     text-align: right;
+    font-weight: bold;
 }
 
 #elo-dropdown {
-    background-color: rgb(63, 133, 109);
-    border-color: white;
-    border-width: 1px;
+    background-color: #333;
     margin-left: 10px;
+
+    font-size: 15px;
 }
 
-.text {
-    font-size: 20px;
-    font-weight: bold;
-    color: white;
-}
 
 #top-box {
+    background-color: #222;
     height: 25%;
-
     margin-top: 35px;
 
-    border-style: solid;
-    border-color: white;
-    border-width: 1px;
+    border-radius: 8px;
 }
 
 #bottom-box {
     height: 65%;
+    max-width: 100%;
     margin-top: 35px;
 
-    border-style: solid;
-    border-color: white;
-    border-width: 1px;
+    background-color: #222;
+    border-radius: 8px;
+    padding: 15px;
+}
+
+#engine-text {
+    padding-top: 25px;
+    padding-bottom: 10px;
+
+    font-size: 20px;
+    font-weight: bold;
 }
 
 #stockfish {
     height: 30%;
-    padding: 7%;
 }
 
 .branch {
-    text-wrap-mode: nowrap;
-    background-color: rgb(45, 82, 69);
+    background-color: #333;
+    margin: 8px 0;
     padding: 5px;
-}
 
-#stockfish :not(:last-of-type).branch {
-    border-bottom: 1px solid white;
+    border-radius: 5px;
+    font-size: 16px;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .branch .eval {
     display: inline-block;
-    margin-right: 25px;
-    width: 70px;
-    padding: 3px;
-    text-align: center;
-    border-radius: 5px;
-    background-color: rgb(63, 133, 109);
+    width: 50px;
+    margin-right: 10px;
+    padding: 3px 0px;
+
     border: 0px;
+    border-radius: 5px;
+
+    text-align: center;
+    font-weight: bold;
+}
+
+.branch .white {
+    background-color: #f0f0f0;
+    color: #000;
+}
+
+.branch .black {
+    background-color: #111;
+    color: white;
+}
+
+.text {
+    font-size: 20px;
+    color: white;
 }
