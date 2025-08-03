@@ -1,12 +1,5 @@
 from flask import Flask, request, jsonify, render_template, send_from_directory
-from stockfish import Stockfish
-import chess
-
-NUM_BRANCHES = 3
-BRANCH_DEPTH = 7
-
-stockfish = Stockfish()
-board = chess.Board()
+from engine import calculate_branches
 
 app = Flask(__name__)
 
@@ -22,12 +15,12 @@ def handle_move():
     pgn = data['pgn']
     elo = data['elo']
     
-    stockfish.set_fen_position(fen)
-    evaluation = stockfish.get_evaluation()
-    branches = [calculate_branch(fen, m["Move"], turn) for m in stockfish.get_top_moves(NUM_BRANCHES)]
+    branches = calculate_branches(fen, turn) 
+    evaluation = branches[0][0]
 
     return jsonify({
         'stockfish': branches,
+        'model': branches, #same branches format
         'evaluation': evaluation,
     })
 
@@ -35,30 +28,39 @@ def handle_move():
 def serve_image(filename):
     return send_from_directory(app.static_folder, 'img/chesspieces/wikipedia/' + filename)
 
-
-def calculate_branch(starting_fen, first_move, turn):
-    next_moves = [] if turn == 'w' else ["..."]
-
-    stockfish.set_fen_position(starting_fen)
-    board.set_fen(starting_fen)
-
-    next_moves.append(board.san(chess.Move.from_uci(first_move)))
-
-    stockfish.make_moves_from_current_position([first_move])
-    board.push(chess.Move.from_uci(first_move))
-
-    
-    for i in range(2 * BRANCH_DEPTH - (turn == 'b') - 1):
-        move = stockfish.get_best_move()
-        if move is None: break
-        next_moves.append(board.san(chess.Move.from_uci(move)))
-
-        stockfish.make_moves_from_current_position([move])
-        board.push(chess.Move.from_uci(move))
-
-
-    return (stockfish.get_evaluation(), next_moves)
-
-
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
+
+#Implement next in new file
+"""def suggest_next_words(model, prefix, top_k=3):
+    words = prefix.strip().split()
+    
+    in_state = kenlm.State()
+
+    # Advance state with the prefix
+    for word in words:
+        next_state = kenlm.State()
+        model.BaseScore(in_state, word, next_state)
+        in_state = next_state
+
+    suggestions = []
+
+    # Try every word in the vocabulary
+    for word in vocab:
+        if word in ("<s>", "</s>"):
+            continue
+        out_state = kenlm.State()
+        score = model.BaseScore(in_state, word, out_state)
+        suggestions.append((10**score, word))
+        
+    # Sort by descending score
+    suggestions.sort(reverse=True)
+    return suggestions[:top_k]
+
+def calculate_branch_lm(elo, pgn):
+    model = kenlm.Model(f'models/24-7-L{elo}-Short.mmap')
+    firstMoveTop3 = suggest_next_words(model=model, prefix=pgn)
+    returnArr = []
+    for move in firstMoveTop3:
+        returnArr.append(suggest_next_words(model=model, prefix=pgn, top_k=7))
+    return returnArr"""

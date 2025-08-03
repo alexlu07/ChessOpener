@@ -114,7 +114,7 @@ function update(data) {
 
     display += "<span class='eval " + ((data.stockfish[i][0].value > 0) ? "white" : "black") + "'>"
     if (data.stockfish[i][0].type == "cp") display += ((data.stockfish[i][0].value > 0) ? "+" : "") + (data.stockfish[i][0].value/100);
-    else if (data.stockfish[i][0].type == "mate") display += "#" + data.stockfish[i][0].value;;
+    else if (data.stockfish[i][0].type == "mate") display += "#" + data.stockfish[i][0].value;
     display += "</span>"
 
     display += "<span class='moves'>"
@@ -130,6 +130,32 @@ function update(data) {
   document.getElementById("stockfish").innerHTML = display;
 
   ready = true;
+
+  // model
+  var display = "";
+  for (var i = 0; i < data.model.length; i++) {
+    display += "<div class='branch'>"
+
+    display += "<span class='eval " + ((data.model[i][0].value > 0) ? "white" : "black") + "'>"
+    if (data.model[i][0].type == "cp") display += ((data.model[i][0].value > 0) ? "+" : "") + (data.model[i][0].value/100);
+    else if (data.stockfish[i][0].type == "mate") display += "#" + data.stockfish[i][0].value;
+    display += "</span>"
+
+    display += "<span class='moves'>"
+
+    for (var j = 0; j < data.model[i][1].length; j++) {
+      if (j % 2 == 0) display += (Math.floor((j + move_count) / 2) + 1) + ". ";
+      display += data.model[i][1][j] + " ";
+    }
+    display += "</span>"
+
+    display += "</div>"
+  }
+
+  document.getElementById("model").innerHTML = display;
+
+  ready = true;
+
 }
 
 
