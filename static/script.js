@@ -12,6 +12,7 @@ var fen = game.fen()
 var pgn = game.pgn()
 
 var redoStack = [];
+var lock = false;
 
 function onDragStart (source, piece, position, orientation) {
   // do not pick up pieces if the game is over
@@ -48,6 +49,8 @@ function onSnapEnd () {
 }
 
 function undoMove() {
+  if (lock) return; // Prevent multiple undo clicks
+  lock = true;
   const move = game.undo();
   if (move) {
     redoStack.push(move.san);
@@ -56,10 +59,13 @@ function undoMove() {
     updateStatus();
   } else {
     console.log("No moves to undo");
+    lock = false;
   }
 }
 
 function redoMove() {
+  if (lock) return; // Prevent multiple redo clicks
+  lock = true;
   if (redoStack.length > 0) {
     var move = redoStack.pop();
     game.move(move);
@@ -67,6 +73,7 @@ function redoMove() {
     updateStatus();
   } else {
     console.log("No moves to redo");
+    lock = false;
   }
 }
 
@@ -132,55 +139,69 @@ function update(data) {
     document.getElementById("score").getElementsByTagName("div")[0].innerHTML = "#" + data.evaluation.value;
   }
 
-  // engine
-  var display = "";
-  for (var i = 0; i < data.stockfish.length; i++) {
-    display += "<div class='branch'>"
+  // Helper to render moves as clickable spans
+  function renderMoves(line, branchType, branchIdx) {
+    let html = "";
+    for (let j = 0; j < line.length; j++) {
+      if (j % 2 == 0) html += (Math.floor((j + move_count) / 2) + 1) + ". ";
+      html += `<span class="move-clickable" data-branch="${branchType}" data-branch-idx="${branchIdx}" data-move-idx="${j}">${line[j]}</span> `;
+    }
+    return html;
+  }
 
+  // engine
+  let display = "";
+  for (let i = 0; i < data.stockfish.length; i++) {
+    display += "<div class='branch'>"
     display += "<span class='eval " + ((data.stockfish[i][0].value > 0) ? "white" : "black") + "'>"
     if (data.stockfish[i][0].type == "cp") display += ((data.stockfish[i][0].value > 0) ? "+" : "") + (data.stockfish[i][0].value/100);
     else if (data.stockfish[i][0].type == "mate") display += "#" + data.stockfish[i][0].value;
     display += "</span>"
-
-    display += "<span class='moves'>"
-
-    for (var j = 0; j < data.stockfish[i][1].length; j++) {
-      if (j % 2 == 0) display += (Math.floor((j + move_count) / 2) + 1) + ". ";
-      display += data.stockfish[i][1][j] + " ";
-    }
-    display += "</span>"
-
+    display += "<span class='moves'>" + renderMoves(data.stockfish[i][1], "stockfish", i) + "</span>"
     display += "</div>"
   }
   document.getElementById("stockfish").innerHTML = display;
 
-  ready = true;
-
   // model
-  var display = "";
-  for (var i = 0; i < data.model.length; i++) {
+  display = "";
+  for (let i = 0; i < data.model.length; i++) {
     display += "<div class='branch'>"
-
     display += "<span class='eval " + ((data.model[i][0].value > 0) ? "white" : "black") + "'>"
     if (data.model[i][0].type == "cp") display += ((data.model[i][0].value > 0) ? "+" : "") + (data.model[i][0].value/100);
-    else if (data.stockfish[i][0].type == "mate") display += "#" + data.stockfish[i][0].value;
+    else if (data.model[i][0].type == "mate") display += "#" + data.model[i][0].value;
     display += "</span>"
-
-    display += "<span class='moves'>"
-
-    for (var j = 0; j < data.model[i][1].length; j++) {
-      if (j % 2 == 0) display += (Math.floor((j + move_count) / 2) + 1) + ". ";
-      display += data.model[i][1][j] + " ";
-    }
-    display += "</span>"
-
+    display += "<span class='moves'>" + renderMoves(data.model[i][1], "model", i) + "</span>"
     display += "</div>"
   }
-
   document.getElementById("model").innerHTML = display;
 
   ready = true;
 
+  // Add click event listeners to all move spans
+  document.querySelectorAll('.move-clickable').forEach(function(elem) {
+    elem.onclick = function() {
+      if (lock) return; // Prevent multiple clicks
+      lock = true; // Lock to prevent further clicks until the move is processed
+      let branchType = this.getAttribute('data-branch');
+      let branchIdx = parseInt(this.getAttribute('data-branch-idx'));
+      let moveIdx = parseInt(this.getAttribute('data-move-idx'));
+      let line = (branchType === "stockfish" ? data.stockfish : data.model)[branchIdx][1];
+
+      // If ".." is present as the first move, skip it (for black to move lines)
+      let startIdx = (line[0] === "..") ? 1 : 0;
+      for (let k = startIdx; k <= moveIdx; k++) {
+        try {
+          game.move(line[k]);
+        } catch (e) {
+          // Ignore illegal moves (shouldn't happen)
+        }
+      }
+      board.position(game.fen());
+      updateStatus();
+    }
+  });
+
+  lock = false;
 }
 
 
