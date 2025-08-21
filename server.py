@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, render_template, send_from_directory
-from engine import calculate_branches
+from engine import calculate_branches, calculate_branches_lm
 
 app = Flask(__name__)
 
@@ -13,14 +13,15 @@ def handle_move():
     turn = data['turn']
     fen = data['fen']
     pgn = data['pgn']
-    elo = data['elo']
+    elo = 1#data['elo']
     
     branches = calculate_branches(fen, turn) 
     evaluation = branches[0][0]
+    branches_model = calculate_branches_lm(pgn, fen, elo, turn)
 
     return jsonify({
         'stockfish': branches,
-        'model': branches, #same branches format
+        'model': branches_model, #same branches format
         'evaluation': evaluation,
     })
 
