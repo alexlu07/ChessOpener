@@ -13,7 +13,7 @@ def handle_move():
     turn = data['turn']
     fen = data['fen']
     pgn = data['pgn']
-    elo = 1#data['elo']
+    elo = 7#data['elo']
     
     branches = calculate_branches(fen, turn) 
     evaluation = branches[0][0]

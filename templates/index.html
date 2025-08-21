@@ -25,12 +25,19 @@
 </head>
 <body>
     <div id="game">
-        <div id="evaluation">
-            <div id="progress"></div>
-            <div id="score" class="text"><div></div></div>
-        </div>
+        <div id="board">
+            <div id="evaluation">
+                <div id="progress"></div>
+                <div id="score" class="text"><div></div></div>
+            </div>
 
-        <div id="myBoard"></div>
+            <div id="myBoard"></div>
+
+            <div id="controls">
+                <button id="undo-btn" class="text">Undo</button>
+                <button id="redo-btn" class="text">Redo</button>
+            </div>
+        </div>
     </div>
 
     <div id="info">
@@ -47,8 +54,10 @@
             </select>
         </div>
 
-        <div id="top-box"></div>
-
+        <div id="top-box">
+            <div id="model-text" class="text">Language Model:</div>
+            <div id="model" class="text"></div>
+        </div>
         <div id="bottom-box">
             <div id="engine-text" class="text">Stockfish:</div>
             <div id="stockfish" class="text"></div>

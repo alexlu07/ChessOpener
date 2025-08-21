@@ -19,19 +19,62 @@ body {
     justify-content: center;
 }
 
+#board {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 60%;
+    aspect-ratio: 1 / 1;
+}
+
+#controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    position: absolute;
+    left: auto;
+    bottom: -15px;
+}
+
+#controls button {
+    font-size: 18px;
+    font-family: 'Segoe UI', Verdana, Geneva, Tahoma, sans-serif;
+    font-weight: bold;
+    color: #fff;
+    background-color: #444;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 10px;
+    margin: 0 5px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, transform 0.1s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+#controls button:hover, #controls button:focus {
+    background-color: #666;
+    color: #ffe082;
+    transform: translateY(-1px) scale(1.04);
+}
+
 #evaluation {
     background-color: white;
     position: relative;
 
-    width: 3%;
-    aspect-ratio: 3 / 50;
+    width: 5%;
+    aspect-ratio: 5 / 85;
     
-    margin-right: 5%;
+    margin-right: 8%;
 }
 
 #progress {
     background-color: black;
     height: 50%;
+    transition: height 0.3s ease-in-out;
 }
 
 #score {
@@ -49,7 +92,7 @@ body {
 }
 
 #myBoard {
-    width: 50%;
+    width: 85%;
 }
 
 #info {
@@ -84,6 +127,7 @@ body {
     margin-top: 35px;
 
     border-radius: 8px;
+    padding: 15px;
 }
 
 #bottom-box {
@@ -96,7 +140,7 @@ body {
     padding: 15px;
 }
 
-#engine-text {
+#engine-text, #model-text {
     padding-top: 25px;
     padding-bottom: 10px;
 

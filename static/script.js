@@ -11,6 +11,7 @@ var move_count = -1;
 var fen = game.fen()
 var pgn = game.pgn()
 
+var redoStack = [];
 
 function onDragStart (source, piece, position, orientation) {
   // do not pick up pieces if the game is over
@@ -43,6 +44,30 @@ function onDrop (source, target) {
 // for castling, en passant, pawn promotion
 function onSnapEnd () {
   board.position(game.fen())
+  redoStack = []; // clear redo stack after a new move
+}
+
+function undoMove() {
+  const move = game.undo();
+  if (move) {
+    redoStack.push(move.san);
+    board.position(game.fen());
+    move_count = move_count - 2;
+    updateStatus();
+  } else {
+    console.log("No moves to undo");
+  }
+}
+
+function redoMove() {
+  if (redoStack.length > 0) {
+    var move = redoStack.pop();
+    game.move(move);
+    board.position(game.fen());
+    updateStatus();
+  } else {
+    console.log("No moves to redo");
+  }
 }
 
 function updateStatus () {
@@ -173,3 +198,5 @@ board = Chessboard('myBoard', config)
 updateStatus()
 
 document.getElementById("elo-dropdown").onchange = function() {elo = document.getElementById("elo-dropdown").value;};
+document.getElementById("undo-btn").onclick = undoMove;
+document.getElementById("redo-btn").onclick = redoMove;
