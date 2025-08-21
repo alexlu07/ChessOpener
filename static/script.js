@@ -48,6 +48,37 @@ function onSnapEnd () {
   redoStack = []; // clear redo stack after a new move
 }
 
+function renderHistory() {
+  const historyDiv = document.getElementById("history");
+  const history = game.history({ verbose: true });
+  let html = "";
+  let moveNumber = 1;
+  for (let i = 0; i < history.length; i++) {
+    if (i % 2 === 0) html += `<span>${moveNumber++}. </span>`;
+    html += `<span class="history-move" data-move-index="${i}">${history[i].san}</span> `;
+  }
+  historyDiv.innerHTML = html;
+
+  // Add click listeners to each move
+  document.querySelectorAll('.history-move').forEach(function(elem) {
+    elem.onclick = function() {
+      if (lock) return;
+      lock = true;
+      const idx = parseInt(this.getAttribute('data-move-index'));
+      // Undo moves until we reach the desired move
+      let movesToUndo = game.history().length - (idx + 1);
+      for (let j = 0; j < movesToUndo; j++) {
+        const undone = game.undo();
+        if (undone) {
+          redoStack.push(undone.san);
+        }
+      }
+      board.position(game.fen());
+      updateStatus();
+    };
+  });
+}
+
 function undoMove() {
   if (lock) return; // Prevent multiple undo clicks
   lock = true;
@@ -122,7 +153,6 @@ function updateStatus () {
   .then(response => response.json())
   .then(data => update(data))
   .catch(error => console.error('Error:', error));
-
 }
 
 function update(data) {
@@ -200,6 +230,8 @@ function update(data) {
       updateStatus();
     }
   });
+
+  renderHistory();
 
   lock = false;
 }

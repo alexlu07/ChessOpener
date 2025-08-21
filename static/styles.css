@@ -131,7 +131,7 @@ body {
 }
 
 #bottom-box {
-    height: 65%;
+    height: 25%;
     max-width: 100%;
     margin-top: 35px;
 
@@ -191,4 +191,20 @@ body {
 .text {
     font-size: 20px;
     color: white;
+}
+
+#history-box {
+    height: 30%;
+    max-width: 100%;
+    margin-top: 25px;
+    background-color: #222;
+    border-radius: 8px;
+    padding: 15px;
+    overflow-y: auto;
+}
+
+#history-text {
+    padding-bottom: 10px;
+    font-size: 20px;
+    font-weight: bold;
 }
